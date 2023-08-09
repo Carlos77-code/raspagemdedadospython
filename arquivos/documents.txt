@@ -1,0 +1,78 @@
+    1 - Para criar o ambiente virtual
+python -m venv venv
+
+    2 - Como ativar o ambiente virtual
+.\venv\Scripts\activate
+
+    3 - como desativar o ambiente virtual
+deactivate
+
+    4 - comando para listar as bibliotecas instaladas no ambiente virtual
+pip freeze
+
+    5 - comando para criar um arquivo de instaladores
+pip freeze > arquivos\requirements.txt
+
+    6 - comando para instalar todas as dependencias do projeto, logo que clona o projeto do github
+pip install -r .\arquivos\requirements.txt
+
+    7 - link para construir o .gitignore
+https://www.freecodecamp.org/portuguese/news/gitignore-explicado-o-que-e-o-gitignore-e-como-adiciona-lo-ao-seu-repositorio/
+
+    8 - para adicionar ou alterar seu arquivo .gitignore global, execute este comando
+git config --global core.excludesfile ~/.gitignore_global
+
+    9 - para instalar a biblioteca PySide6
+https://www.qt.io/qt-for-python
+pip install pyside6 (para pegar a última versão)
+pip install pyside6==6.0 (para pegar a versão 6.0 especificamente)
+
+Implementação: import PySide6.QtCore
+
+# Prints PySide6 version
+print(PySide6.__version__)
+
+# Prints the Qt version used to compile PySide6
+print(PySide6.QtCore.__version__)
+
+    10 - Instalando a biblioteca Selenium
+pip install selenium
+
+    11 - Instalando a biblioteca WebDriver-Manager
+pip install webdriver-manager
+
+    12 - Instalando a biblioteca Pandas
+pip install pandas
+
+    13 - Instalando a biblioteca Common
+pip install common
+
+    14 - Instalando a biblioteca By
+pip install By
+
+    16 - Instalando a biblioteca UI
+pip install ui
+
+    17 - Por padrão o Powershell vem bloqueado para a ativação do ambiente virtual, digite esse comando no powershell como admin
+Set-ExecutionPolicy RemoteSigned
+
+    18 - Instalando a biblioteca beautifulsoup4
+pip install beautifulsoup4
+
+    19 - Instalando a biblioteca pyautogui
+pip install pyautogui
+
+    20 - Instalando a biblioteca pyodbc
+pip install pyodbc
+
+    21 - Instalando a biblioteca cx_oracle
+pip install cx_oracle
+
+    22 - Instalando a biblioteca pytest
+pip install pytest
+
+    23 - Instalando a biblioteca openpyxl
+pip install openpyxl
+
+    24 - Instalando a biblioteca pandas
+pip install pandas

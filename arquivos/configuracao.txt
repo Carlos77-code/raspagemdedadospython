@@ -1,0 +1,116 @@
+Criando o framework de automação
+
+Agora que o ambiente de desenvolvimento está configurado, é hora de começar a criar o framework de automação.
+
+Crie uma estrutura de pastas
+Comece criando uma estrutura de pastas para o projeto. Aqui está um exemplo básico:
+
+myautomationframework/
+├── config/
+├── helpers/
+├── pages/
+├── tests/
+└── utils/
+
+A pasta "config" contém arquivos de configuração, como credenciais de login, URLs de teste, etc.
+A pasta "helpers" contém arquivos de suporte, como funções de auxílio para interagir com elementos da página.
+A pasta "pages" contém classes para cada página da web a ser testada.
+A pasta "tests" contém os arquivos de teste.
+A pasta "utils" contém outras funções e classes de suporte.
+Crie uma página de exemplo
+# - Vamos criar uma página de exemplo para testar. Crie um arquivo chamado "example_page.py" na pasta "pages" com o seguinte conteúdo:
+
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+
+
+class ExamplePage:
+    def __init__(self, driver):
+        self.driver = driver
+
+    def open(self):
+        self.driver.get("https://www.example.com")
+
+    def wait_until_loaded(self):
+        WebDriverWait(self.driver, 10).until(
+            EC.presence_of_element_located((By.CSS_SELECTOR, "h1"))
+        )
+
+    def get_title(self):
+        return self.driver.title
+
+# - Esta classe representa uma página de exemplo com três métodos:
+
+"open": Abre a página.
+"wait_until_loaded": Aguarda até que um elemento específico seja carregado.
+"get_title": Retorna o título da página.
+Crie um teste de exemplo
+Agora que temos uma página de exemplo, vamos criar um teste de exemplo para testá-la. 
+Crie um arquivo chamado "test_example.py" na pasta "tests" com o seguinte conteúdo:
+
+from pages.example_page import ExamplePage
+
+
+def test_example_page_title(driver):
+    page = ExamplePage(driver)
+    page.open()
+    page.wait_until_loaded()
+    assert page.get_title() == "Example Domain"
+
+Este é um teste simples que verifica se o título da página é "Example Domain".
+
+Configure o arquivo de configuração
+Crie um arquivo chamado "config.py" na pasta "config" com as seguintes informações:
+
+class Config:
+    # Configurações do navegador
+    BROWSER = "chrome"
+
+    # Configurações de login
+    USERNAME = "seu_username"
+    PASSWORD = "sua_senha"
+
+Crie um arquivo chamado "browser.py" na pasta "utils" com o seguinte conteúdo:
+
+from selenium import webdriver
+from config.config import Config
+
+
+class Browser:
+    def __init__(self):
+        self.config = Config()
+
+    def get_driver(self):
+        if self.config.BROWSER == "chrome":
+            options = webdriver.ChromeOptions()
+            options.add_argument("--start-maximized")
+            return webdriver.Chrome(options=options)
+
+Esta classe de suporte usa a biblioteca Selenium para iniciar o navegador Chrome e maximizar a janela.
+
+Crie um arquivo principal para executar os testes
+Crie um arquivo chamado "main.py" na raiz do projeto com o seguinte conteúdo:
+
+import pytest
+from utils.browser import Browser
+
+
+@pytest.fixture(scope="session")
+def driver():
+    browser = Browser()
+    driver = browser.get_driver()
+    yield driver
+    driver.quit()
+
+
+if __name__ == "__main__":
+    pytest.main(["-v"])
+
+Este arquivo usa o pytest para executar os testes e usa a fixture "driver" para inicializar e fechar o navegador antes e depois de cada execução do teste.
+
+Execute os testes
+Para executar os testes, basta executar o arquivo "main.py":
+
+$ python main.py
+
