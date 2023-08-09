@@ -3,6 +3,7 @@ from openpyxl import Workbook
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from utils.browser_utils import navegador
+import time
 
 
 
@@ -26,29 +27,36 @@ class ExtraiInfoProdutoKipa:
         return page_price_texts
     
     def page_run(self):
-        number_pages_element = self.navegador.find_element(By.XPATH, '//*[@id="aspnetForm"]/div[5]/div/section/div/div/div/div/div[2]/div[1]/div[2]/div[3]/div[1]/p/span')
-        number_pages_text = number_pages_element.text.replace("Exibindo página ", "").split(" de ")[1]
-        number_pages = int(number_pages_text)
-
         all_page_names = []  # Armazena todos os nomes das páginas
         all_page_prices = []  # Armazena todos os preços das páginas
-        # page
-        for page in range(1, number_pages + 1):
+        current_page = 1
+        
+        while True:
             page_name_texts = self.product_names()  # Extrai nomes para a página atual
             page_price_texts = self.product_prices()  # Extrai preços para a página atual
-
+            
             all_page_names.extend(page_name_texts)  # Adiciona nomes da página atual à lista geral
             all_page_prices.extend(page_price_texts)  # Adiciona preços da página atual à lista geral
-
+            print("Página:", current_page)  # Print do número da página
+            current_page += 1
+            
             try:
-                button_next_page = WebDriverWait(self.navegador, 10).until(
-                    EC.presence_of_element_located((By.XPATH, '//*[@id="ctl00_CPH1_toolbarBottom_NextPageNav"]'))
-                )
+                button_next_page = self.navegador.find_element(By.XPATH, '//*[@id="ctl00_CPH1_toolbarBottom_NextPageNav"]')
+                if not button_next_page.is_enabled():
+                    break  # Sai do loop se o botão "Next Page" não estiver habilitado
+                    
                 self.navegador.execute_script("arguments[0].click();", button_next_page)
+                
+                time.sleep(2)  # Aguarda um tempo para a próxima página carregar
+                
             except:
                 break
 
-        # self.create_plan(all_page_names, all_page_prices)  # Passa as listas combinadas para create_plan
+        print("Nomes:", all_page_names)  # Print dos nomes coletados
+        print("Preços:", all_page_prices)  # Print dos preços coletados
+        
+        self.create_plan(all_page_names, all_page_prices)  # Passa as listas combinadas para create_plan
+                
 
     def create_plan(self, all_page_names, all_page_prices):
         # Criar um novo arquivo XLSX e uma planilha
@@ -61,11 +69,8 @@ class ExtraiInfoProdutoKipa:
         # Itera sobre os dados e insere um abaixo do outro
         for name, price in zip(all_page_names, all_page_prices):
             sheet.append([name, price])
-
+        
         # Salva o arquivo XLSX
         workbook.save(".\\arquivos\\dados_product.xlsx")
 
-        print("Dados extraídos e salvos no arquivo 'dados_produto.xlsx'.")
-
-
-
+        # print("Dados extraídos e salvos no arquivo 'dados_produto.xlsx'.")
